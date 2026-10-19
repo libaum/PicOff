@@ -1,79 +1,38 @@
-<div align="center">
-  <h1>📸 Pic Off</h1>
+# Pic Off
 
-  <p>
-    <strong>Social Photo Challenge App for Android</strong>
-  </p>
+An Android app for photo challenges between friends. You pick a theme, both of you take a picture, and you each vote on whose is better.
 
-  <p>
-    <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/Language-Kotlin-7f52ff?style=flat-square&logo=kotlin" alt="Kotlin" /></a>
-    <a href="https://developer.android.com/"><img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=flat-square&logo=android" alt="Android" /></a>
-    <a href="https://firebase.google.com/"><img src="https://img.shields.io/badge/Backend-Firebase-FFCA28?style=flat-square&logo=firebase" alt="Firebase" /></a>
-    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License" /></a>
-  </p>
-</div>
+I built it to practice a clean single-activity architecture in Kotlin, with a real backend and a multi-step flow between two users.
 
-## 💡 About
+| Home | Challenges | Start a challenge |
+|:---:|:---:|:---:|
+| <img src="assets/home.jpg" width="200" alt="Home" /> | <img src="assets/challenges.jpg" width="200" alt="Challenge list" /> | <img src="assets/start_challenge.jpg" width="200" alt="Start a challenge" /> |
 
-**Pic Off** makes photo challenges fun and effortless. Built natively with **Kotlin**, it allows users to challenge friends to take the best picture based on a specific theme.
+## How a challenge works
 
-The goal was to engineer a robust **Single-Activity application** utilizing **MVVM architecture** to handle complex state transitions seamlessly.
+1. You pick a friend and a challenge (from the list, or a random one), take your photo and send it.
+2. Your friend accepts, takes their own photo and sends it back.
+3. The recipient votes between the two photos, then the challenger does.
+4. Both votes are in, the winner is shown, and the challenge is done.
 
----
+In the code this is a status string on the challenge in Firebase: `sent`, `open`, `voteRecipient`, `voteChallenger`, `result`, `done`. The home screen sorts challenges into Received and Sent depending on whose turn it is.
 
-## 📱 Screenshots
+Other things it does: Google sign-in, a friends list, and a daily reminder notification at 13:00 that survives a reboot.
 
-| Home & Feed | Challenges | Start New Challenge |
-|:-----------:|:----------------:|:----------------:|
-| <img src="assets/home.jpg" width="200" alt="Home Screen" /> | <img src="assets/challenges.jpg" width="200" alt="Create Screen" /> | <img src="assets/start_challenge.jpg" width="200" alt="Voting Screen" /> |
----
+## Tech
 
-## 🛠 Tech Stack
+- Kotlin, single activity with the Navigation Component, ViewBinding
+- One `MainViewModel` with LiveData, Firebase listeners feed it
+- Firebase Auth (Google), Realtime Database and Storage for challenges and photos
+- `AlarmManager` and a boot receiver for the reminder, Glide for images
+- minSdk 26
 
-* **Architecture:** MVVM, Single Activity (Navigation Component), ViewBinding
-* **Core:** Kotlin, Coroutines, LiveData
-* **Backend (Firebase):** Auth (Google Sign-In), Realtime Database, Storage
-* **Key Features:** AlarmManager (Resilient Notifications), Camera Intents, Offline Support
+## Build
 
----
+1. Clone the repo.
+2. Create your own Firebase project and put its `google-services.json` into `app/`.
+3. Open in Android Studio and run.
 
-## 🔄 Challenge State Logic
+## License
 
-Managing the lifecycle of a challenge between two users is handled via a state machine in the `MainViewModel`:
-
-```mermaid
-graph LR
-    A[Sent] --> B[Open]
-    B --> C[Vote Recipient]
-    C --> D[Vote Challenger]
-    D --> E[Result]
-    E --> F[Done]
-```
-
-1. **Sent:** Challenger sends request.
-2. **Open:** Recipient accepts and uploads photo.
-3. **Vote Recipient:** Recipient votes.
-4. **Vote Challenger:** Challenger votes.
-5. **Result:** Winner is calculated and displayed.
-6. **Done:** Challenge completed.
-
----
-
-## 📥 Installation
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/libaum/PicOff.git
-   ```
-
-2. **Firebase Setup**
-   * Add your own `google-services.json` to the `/app` directory.
-
-3. **Build**
-   * Open in **Android Studio** (Electric Eel+) and run (minSdk 26).
-
----
-
-<p align="center">
-    Built with ❤️ and Kotlin for Android
-</p>
+MIT, see [LICENSE](LICENSE).
